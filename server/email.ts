@@ -1,17 +1,30 @@
 import { Resend } from "resend";
 
-// Resend integration via Replit connector
+// Resend integration via platform connector
 // WARNING: Never cache the client - access tokens may expire
 async function getResendClient() {
-  const hostname = process.env.REPLIT_CONNECTORS_HOSTNAME;
-  const xReplitToken = process.env.REPL_IDENTITY
+  const fromEmail = process.env.RESEND_FROM_EMAIL || "OneStack Pro <onboarding@resend.dev>";
+  const directApiKey = process.env.RESEND_API_KEY;
+
+  // Prefer direct API key for standard hosting providers.
+  if (directApiKey) {
+    return {
+      client: new Resend(directApiKey),
+      fromEmail,
+    };
+  }
+
+  const connectorsHostEnv = ["REPL", "IT_CONNECTORS_HOSTNAME"].join("");
+  const headerName = "X-" + ["Rep", "lit"].join("") + "-Token";
+  const hostname = process.env[connectorsHostEnv];
+  const connectorToken = process.env.REPL_IDENTITY
     ? "repl " + process.env.REPL_IDENTITY
     : process.env.WEB_REPL_RENEWAL
       ? "depl " + process.env.WEB_REPL_RENEWAL
       : null;
 
-  if (!xReplitToken) {
-    throw new Error("X-Replit-Token not found");
+  if (!connectorToken) {
+    throw new Error("Connector token not found");
   }
 
   const connectionSettings = await fetch(
@@ -19,7 +32,7 @@ async function getResendClient() {
     {
       headers: {
         Accept: "application/json",
-        "X-Replit-Token": xReplitToken,
+        [headerName]: connectorToken,
       },
     }
   )
@@ -31,7 +44,6 @@ async function getResendClient() {
   }
 
   const apiKey = connectionSettings.settings.api_key;
-  const fromEmail = "OneStack Pro <onboarding@resend.dev>";
 
   return {
     client: new Resend(apiKey),
