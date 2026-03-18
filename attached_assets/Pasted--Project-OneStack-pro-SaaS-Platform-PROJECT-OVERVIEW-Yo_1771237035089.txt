@@ -1,0 +1,384 @@
+(Project: OneStack.pro SaaS Platform)
+
+PROJECT OVERVIEW
+
+You are building a full-stack SaaS web application called OneStack.pro.
+
+OneStack is a subscription-based software access platform where users:
+
+Subscribe via Whop
+
+Log into a website dashboard
+
+View a list of AI/software tools
+
+Click a tool
+
+Automatically access it through a controlled session
+
+Never see the actual login credentials
+
+Cannot modify billing or purchase credits inside the tools
+
+The platform includes:
+
+Authentication system
+
+Whop subscription verification
+
+Discord OAuth linking
+
+Affiliate system with recurring commissions
+
+Admin dashboard
+
+Secure tool launch system
+
+Manual affiliate payout request system
+
+This project must be built in clear development phases.
+
+Do NOT build everything at once.
+
+TECH STACK REQUIREMENTS
+
+Use:
+
+Next.js (full-stack)
+
+Node.js API routes
+
+PostgreSQL (Neon or Supabase)
+
+Prisma ORM
+
+JWT or secure session-based authentication
+
+Environment variables for all secrets
+
+Do NOT:
+
+Hardcode API keys
+
+Skip backend validation
+
+Store sensitive data in frontend
+
+DEVELOPMENT PHASE STRUCTURE
+
+Build strictly in this order:
+
+PHASE 1 – FOUNDATION & AUTHENTICATION
+
+Goal: Secure user system working.
+
+Build:
+
+Database schema
+
+User registration
+
+Login system
+
+Password hashing
+
+JWT/session cookies
+
+Middleware for protected routes
+
+Basic dashboard placeholder page
+
+Database tables required:
+
+users
+
+id
+
+email
+
+password_hash
+
+role (user/admin)
+
+subscription_status
+
+discord_id
+
+referral_code
+
+referred_by
+
+earnings_balance
+
+created_at
+
+Do not proceed to next phase until authentication is fully functional.
+
+PHASE 2 – SUBSCRIPTION & WEBHOOK INTEGRATION
+
+Goal: Whop controls user access.
+
+Build:
+
+/api/webhooks/whop endpoint
+
+Handle subscription active
+
+Handle subscription cancelled
+
+Update user.subscription_status
+
+Protect dashboard based on subscription
+
+Dashboard must:
+
+Block access if subscription inactive
+
+Test using mock webhook payload first.
+
+PHASE 3 – AFFILIATE SYSTEM (Recurring)
+
+Goal: Recurring referral tracking.
+
+Build:
+
+Tables:
+
+referrals
+
+id
+
+referrer_id
+
+referred_user_id
+
+commission_percentage (25% default, 40% if admin-created)
+
+active
+
+payout_requests
+
+id
+
+user_id
+
+amount
+
+status (pending/approved/paid)
+
+created_at
+
+Logic:
+
+On signup, check for ?ref= parameter
+
+Attach referral
+
+On subscription renewal webhook → calculate commission
+
+Add commission to earnings_balance
+
+Stop commission if subscription cancelled
+
+User dashboard must show:
+
+Referral link
+
+Earnings balance
+
+Request payout button
+
+Admin dashboard must allow:
+
+Approve payout
+
+Mark as paid
+
+No automatic payout integration.
+
+PHASE 4 – DISCORD OAUTH INTEGRATION
+
+Goal: Link Discord account to user.
+
+Build:
+
+Discord OAuth login
+
+Store discord_id
+
+Optional role verification logic
+
+Prevent dashboard access if Discord not linked
+
+Do not build Discord bot yet unless required.
+
+PHASE 5 – TOOL DASHBOARD SYSTEM
+
+Goal: Tool selection UI.
+
+Build:
+
+tools table
+
+id
+
+name
+
+description
+
+icon
+
+active
+
+User dashboard must:
+
+Display available tools
+
+Show launch button
+
+Only show tools if subscription active
+
+No real tool integration yet.
+Just placeholder launch routes.
+
+PHASE 6 – CONTROLLED TOOL ACCESS SYSTEM
+
+Goal: Secure launch system.
+
+Build:
+
+Backend endpoint for tool launch
+
+Validate:
+
+user authenticated
+
+subscription active
+
+tool active
+
+Log session in session_logs table
+
+Redirect to controlled environment
+
+Session_logs table:
+
+id
+
+user_id
+
+tool_id
+
+ip_address
+
+created_at
+
+User must:
+
+Never see credentials
+
+Not access billing/settings URLs (block if possible)
+
+Keep MVP simple and secure.
+
+PHASE 7 – ADMIN DASHBOARD
+
+Admin can:
+
+View all users
+
+View subscription status
+
+View affiliate balances
+
+View payout requests
+
+Approve payout
+
+Disable tool
+
+Force deactivate user
+
+Admin routes must be backend protected (role check).
+
+PHASE 8 – SECURITY HARDENING
+
+Implement:
+
+Session expiration
+
+Rate limiting
+
+IP logging
+
+Prevent concurrent sessions (basic version)
+
+Input validation
+
+Secure environment variable handling
+
+DESIGN REQUIREMENTS
+
+UI should:
+
+Be clean and modern
+
+Inspired by MasterKey layout
+
+Not copy branding or colors directly
+
+Use TailwindCSS
+
+Dark-themed dashboard preferred
+
+Simple tool cards grid layout
+
+DEPLOYMENT REQUIREMENTS
+
+Prepare for:
+
+Hostinger domain connection
+
+Production database
+
+SSL enabled
+
+Environment variables configured securely
+
+IMPORTANT CONSTRAINTS
+
+Do NOT:
+
+Expose software login credentials
+
+Allow users to access billing pages inside tools
+
+Skip backend validation checks
+
+Build payout automation
+
+Overcomplicate MVP
+
+Build modular, scalable code.
+
+FINAL DELIVERABLE
+
+A production-ready SaaS platform with:
+
+Authentication
+
+Subscription control
+
+Affiliate system
+
+Admin dashboard
+
+Tool dashboard
+
+Controlled access flow
+
+Manual payout workflow
+
+All features must follow the defined phased structure.
+
+END OF MASTER PROMPT

@@ -1,0 +1,84 @@
+OneStack Pro – Website & Software Update Requests
+
+1. Tools Section Improvements
+
+A. Visual Enhancements
+	•	Display each tool’s official logo alongside its name across the website UI.
+	•	Logos must be high resolution and consistently sized.
+	•	Maintain clean spacing and alignment for a premium SaaS look.
+
+B. Section Header
+
+Add this header clearly on the website:
+
+The Tools We Offer
+
+Under this section, display the following tools:
+	•	Perplexity
+	•	ChatGPT
+	•	Freepik
+	•	ElevenLabs
+	•	Claude
+	•	Kalodata
+	•	GetHooked
+	•	Canva
+	•	Storyblocks
+	•	SpyFu
+	•	Higgsfield
+
+Make it clear that:
+	•	These tools are included in OneStack Pro.
+	•	Users will be able to access them directly once the software launches.
+
+C. Tools Section Footer Text
+
+At the bottom of the tools section, add:
+
+“More tools coming soon. Join the Discord and tell us what tools you want to see.”
+
+⸻
+
+2. Tool Expansion Capability (Future Tools)
+
+Improve and ensure the following functionality:
+	•	Admin can easily add new tools in the future.
+	•	Admin can upload a logo for each new tool.
+	•	Admin can add tool name and description.
+	•	Admin can link each tool to its access URL or internal dashboard page.
+	•	The tools section updates dynamically when new tools are added.
+	•	No hardcoded tool list.
+
+This must be scalable for future additions.
+
+⸻
+
+3. Login System Improvements
+
+A. Welcome Message
+
+After login, display:
+
+“Welcome back, [Username]”
+
+Requirements:
+	•	Dynamically pull the logged-in user’s username.
+	•	Place near the top of the dashboard.
+
+B. Forgot Password
+
+Add a “Forgot Password?” option on the login page.
+
+Requirements:
+	•	User enters email.
+	•	Password reset link sent securely via email.
+	•	Secure token expiration.
+	•	Clean, simple UI flow.
+
+⸻
+
+4. Dashboard Logo Visibility
+	•	Make the main OneStack logo more prominent after login.
+	•	Slightly increase size and improve placement.
+	•	It should reinforce branding without overwhelming the interface.
+
+⸻

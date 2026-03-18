@@ -1,0 +1,226 @@
+So when I sign in as a new member I use the DICloak original email with the users encryption key as the password?
+
+H
+Profile Image
+Me
+
+Mar 09, 1:05 PM
+Yes that's right ✅️
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:05 PM
+It doesn’t work, says wrong password
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:06 PM
+I’ve created an entirely new account as well
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:06 PM
+Says password error
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:06 PM
+Is it a sign in or sign up?
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:07 PM
+I’m signing in atm, but it doesn’t work
+
+H
+Profile Image
+Me
+
+Mar 09, 1:07 PM
+Ohhh, you mean signing in to the gpt right?
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:07 PM
+No the DICloak
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:08 PM
+Error
+
+Error
+
+
+
+Attachment_1773058085.jpeg
+
+(4.43 MB)
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:08 PM
+This is a new account
+
+H
+Profile Image
+Me
+
+Mar 09, 1:08 PM
+Ohhh, i see where the mistake his
+
+H
+Profile Image
+Me
+
+Mar 09, 1:09 PM
+You will use the same e-mail and password as shown in the setup guide.
+
+H
+Profile Image
+Me
+
+Mar 09, 1:09 PM
+Then the 2fa code is gotten from the dashboard that's acter the new users as subscribes through whop
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:11 PM
+So still this one?
+
+
+Attachment_1773058276.jpeg
+
+(4.65 MB)
+
+H
+Profile Image
+Me
+
+Mar 09, 1:13 PM
+Yes exactly
+
+H
+Profile Image
+Me
+
+Mar 09, 1:13 PM
+That's how it works for the competitor website too
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:14 PM
+It’s been blocked
+
+
+Attachment_1773058472.jpeg
+
+(5.77 MB)
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:14 PM
+Also it still lets me cancel subscriptions, passwords etc
+
+H
+Profile Image
+Me
+
+Mar 09, 1:16 PM
+Replied
+
+ashtonacac
+
+Mar 09, 1:14 PM
+
+It’s been blocked
+
+
+Did you mean typing the the onestack.pro into the Ginsbrowser which js meant for those tools.?
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 1:17 PM
+When you click open the profile on DICloak it automatically opens OneStack webistes which is blocked
+
+H
+Profile Image
+Me
+
+Mar 09, 1:17 PM
+Replied
+
+ashtonacac
+
+Mar 09, 1:14 PM
+
+Also it still lets me cancel subscriptions, passwords etc
+
+Opps not again!!  
+
+I've actually toggled on/off the necessary features in the global settings.
+
+H
+Profile Image
+Me
+
+Mar 09, 1:18 PM
+Replied
+
+ashtonacac
+
+Mar 09, 1:17 PM
+
+When you click open the profile on DICloak it automatically opens OneStack webistes which is blocked
+
+Ohhhh...
+
+H
+Profile Image
+Me
+
+Mar 09, 1:18 PM
+Replied
+
+ashtonacac
+
+Mar 09, 1:17 PM
+
+When you click open the profile on DICloak it automatically opens OneStack webistes which is blocked
+
+Now, I see. 
+
+Give me few mins to check out for what's causing that
+
+A
+Profile Image
+ashtonacac
+
+Mar 09, 10:34 PM
+Ok
+
+Type a message...

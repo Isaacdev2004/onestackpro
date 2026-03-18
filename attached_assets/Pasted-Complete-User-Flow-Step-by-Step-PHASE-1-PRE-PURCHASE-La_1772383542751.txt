@@ -1,0 +1,212 @@
+Complete User Flow (Step by Step)
+PHASE 1: PRE-PURCHASE (Landing Page)
+User lands on onestack.pro
+
+Clean, professional SaaS landing page
+
+Clear value proposition: "Access 10+ Premium Tools for One Monthly Price"
+
+Tools displayed with official logos (Perplexity, ChatGPT, Freepik, ElevenLabs, Claude, Kalodata, GetHooked, Canva, Storyblocks, SpyFu, Higgsfield)
+
+Single CTA button: "Get Started" or "Subscribe Now"
+
+PHASE 2: PURCHASE (Whop Checkout)
+User clicks "Subscribe"
+
+Redirected directly to Whop checkout: https://whop.com/onestack/onestack-pro/
+
+User completes payment
+
+No account creation required before payment
+
+After successful payment:
+
+Whop sends webhook to https://onestack.pro/api/webhooks/whop
+
+Platform immediately generates:
+
+Unique user account (behind the scenes)
+
+Unique encryption key
+
+Secure session token
+
+PHASE 3: POST-PURCHASE (The Critical Flow)
+User is redirected back to onestack.pro to this exact URL:
+
+text
+https://onestack.pro/welcome?session={unique_token}
+Page: "Welcome to OneStack Pro – Set Up Your Access"
+
+This page displays:
+
+Big header: "You're almost there! Let's get you set up in 2 minutes."
+
+Your Unique Encryption Key (prominently displayed in a box):
+
+text
+KEY: XXXX-XXXX-XXXX-XXXX
+User can click "Copy to clipboard"
+
+This key is also sent to their email (optional backup)
+
+Step-by-Step Instructions:
+
+Step 1: Download DICloak Browser
+
+Button: "Download DICloak" (links to official download)
+
+Note: "This is the secure browser that will give you instant access to all tools"
+
+Step 2: Open DICloak and Create New Profile
+
+Simple instructions with screenshots
+
+"Name it 'OneStack' or anything you prefer"
+
+Step 3: Enter Your Encryption Key
+
+"In DICloak, go to Settings → Security → Enter Key"
+
+"Paste the key above"
+
+Step 4: Launch Any Tool
+
+"Once your key is entered, simply click any tool below and it will open automatically logged in"
+
+"2FA codes are handled automatically – you won't see or need to enter them"
+
+Tools Grid
+
+All available tools displayed with logos
+
+Each tool is clickable (once setup is complete)
+
+Grayed out until user completes step 3
+
+Optional Discord Link
+
+Small section: "Join our community"
+
+Button: "Link Discord (Optional)"
+
+Not required for tool access
+
+Used for community, support, and role assignment only
+
+PHASE 4: ONGOING ACCESS (Dashboard)
+Once setup is complete, user sees:
+
+Dashboard at https://onestack.pro/dashboard
+
+Welcome header: "Welcome back, [Username]"
+
+Tools Grid
+
+All available tools with logos
+
+Clicking any tool:
+
+Opens in DICloak (if DICloak is installed)
+
+Automatically logged in
+
+2FA auto-filled (user never sees the code)
+
+User cannot access billing, settings, or purchase credits
+
+Affiliate Section
+
+Shows affiliate link: https://whop.com/onestack/?ref=USERCODE
+
+Shows earnings: 25% recurring commission
+
+Shows payout history
+
+Button: "Request Payout" (requires bank details: BSB, Account Number, Account Name)
+
+Settings
+
+Change password
+
+View encryption key
+
+Link Discord (optional)
+
+2FA is mandatory on first login only (not required every time)
+
+🔐 Security & Access Details
+Encryption Key Behavior
+Each user gets a unique encryption key
+
+Key is generated immediately after Whop payment
+
+Key is tied to their subscription status
+
+If subscription lapses → key becomes invalid → DICloak access blocked
+
+Key is stored securely, never exposed to other users
+
+2FA Handling
+Tool accounts have 2FA enabled (for admin security)
+
+Users never see or enter 2FA codes
+
+Platform automatically generates/grabs the current 2FA code when launching
+
+Code is injected into the DICloak session automatically
+
+User experience: click tool → tool opens logged in → no interruptions
+
+Account Sharing Prevention
+Encryption key is tied to device fingerprint (optional)
+
+Concurrent session limits
+
+IP monitoring for unusual activity
+
+Mandatory 2FA on first login (prevents easy credential sharing)
+
+🛠️ Admin Capabilities
+Admin dashboard includes:
+
+User Management
+
+View all users
+
+Search users
+
+Suspend/delete users
+
+Manually activate/deactivate subscriptions
+
+View user's encryption key (if needed for support)
+
+Affiliate Management
+
+Create special 40% affiliate codes
+
+Manually adjust any user's commission
+
+View payout requests with bank details
+
+Mark payouts as paid
+
+Tool Management
+
+Add new tools (name, logo, access URL)
+
+Remove tools
+
+Update tool status
+
+No hardcoding – fully dynamic
+
+Multiple Admin Accounts
+
+Create additional admin users
+
+Full admin privileges for co-owners
+
+Admins can reset their own passwords
+
