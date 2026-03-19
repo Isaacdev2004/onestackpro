@@ -71,6 +71,12 @@ async function ensureSessionTable() {
   `);
 }
 
+function getSafeNextPath(nextParam?: string): string {
+  if (!nextParam) return "/dashboard";
+  if (!nextParam.startsWith("/") || nextParam.startsWith("//")) return "/dashboard";
+  return nextParam;
+}
+
 declare module "express-session" {
   interface SessionData {
     userId: string;
@@ -378,6 +384,8 @@ export async function registerRoutes(
   app.get("/api/auth/welcome", async (req: Request, res: Response) => {
     try {
       const token = req.query.session as string;
+      const shouldRedirect = req.query.redirect === "1";
+      const nextPath = getSafeNextPath(req.query.next as string | undefined);
       if (!token) {
         return res.status(400).json({ message: "Missing session token" });
       }
@@ -390,7 +398,13 @@ export async function registerRoutes(
       req.session.save((err) => {
         if (err) {
           console.error("Failed to persist welcome login session:", err);
+          if (shouldRedirect) {
+            return res.redirect("/auth?discord=error&reason=server_error");
+          }
           return res.status(500).json({ message: "Failed to persist session" });
+        }
+        if (shouldRedirect) {
+          return res.redirect(nextPath);
         }
         return res.json({ user: sanitizeUser(user) });
       });
@@ -639,9 +653,10 @@ export async function registerRoutes(
       await storage.updateUser(user.id, { welcomeToken: sessionToken, currentSessionId: null });
       const params = new URLSearchParams({
         session: sessionToken,
-        next: "dashboard",
+        redirect: "1",
+        next: "/dashboard",
       });
-      return res.redirect(`/welcome?${params.toString()}`);
+      return res.redirect(`/api/auth/welcome?${params.toString()}`);
       return;
     } catch (err: any) {
       console.error("Discord callback error:", err);
