@@ -503,13 +503,7 @@ export async function registerRoutes(
     const redirectUri = getDiscordRedirectUri(req);
     req.session.discordRedirectUri = redirectUri;
     const url = getDiscordAuthUrl(state, redirectUri);
-    req.session.save((err) => {
-      if (err) {
-        console.error("Failed to persist OAuth session:", err);
-        return res.status(500).json({ message: "Failed to initialize authorization flow." });
-      }
-      return res.json({ url });
-    });
+    res.json({ url });
   });
 
   app.get("/api/discord/callback", async (req: Request, res: Response) => {
@@ -581,14 +575,7 @@ export async function registerRoutes(
 
       req.session.userId = user.id;
       await storage.updateUser(user.id, { currentSessionId: req.sessionID });
-      req.session.save((err) => {
-        if (err) {
-          console.error("Failed to persist login session:", err);
-          return res.redirect("/auth?discord=error&reason=server_error");
-        }
-        return res.redirect("/credentials");
-      });
-      return;
+      return res.redirect("/credentials");
     } catch (err: any) {
       console.error("Discord callback error:", err);
       return res.redirect("/auth?discord=error&reason=server_error");
