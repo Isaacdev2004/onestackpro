@@ -628,7 +628,14 @@ export async function registerRoutes(
 
       req.session.userId = user.id;
       await storage.updateUser(user.id, { currentSessionId: req.sessionID });
-      return res.redirect("/credentials");
+      req.session.save((err) => {
+        if (err) {
+          console.error("Failed to persist login session after Discord callback:", err);
+          return res.redirect("/auth?discord=error&reason=server_error");
+        }
+        return res.redirect("/credentials");
+      });
+      return;
     } catch (err: any) {
       console.error("Discord callback error:", err);
       return res.redirect("/auth?discord=error&reason=server_error");
