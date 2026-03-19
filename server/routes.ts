@@ -77,6 +77,15 @@ function getSafeNextPath(nextParam?: string): string {
   return nextParam;
 }
 
+function normalizeCookieDomain(domain?: string): string | undefined {
+  if (!domain) return undefined;
+  let cleaned = domain.trim().toLowerCase();
+  cleaned = cleaned.replace(/^https?:\/\//, "");
+  cleaned = cleaned.split("/")[0];
+  if (!cleaned) return undefined;
+  return cleaned.startsWith(".") ? cleaned : `.${cleaned}`;
+}
+
 declare module "express-session" {
   interface SessionData {
     userId: string;
@@ -225,12 +234,15 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   const isProduction = process.env.NODE_ENV === "production";
-  const sessionCookieDomain = process.env.SESSION_COOKIE_DOMAIN;
+  const configuredCookieDomain = normalizeCookieDomain(process.env.SESSION_COOKIE_DOMAIN);
+  const publicAppHost = normalizeCookieDomain(process.env.PUBLIC_APP_URL);
+  const sessionCookieDomain =
+    configuredCookieDomain || (isProduction && publicAppHost?.endsWith("onestack.pro") ? ".onestack.pro" : undefined);
 
   await ensureSessionTable();
 
   if (isProduction) {
-    app.set("trust proxy", 1);
+    app.set("trust proxy", true);
   }
 
   app.use(
@@ -246,7 +258,7 @@ export async function registerRoutes(
         maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
         secure: isProduction,
-        sameSite: "lax",
+        sameSite: isProduction ? "none" : "lax",
         ...(sessionCookieDomain ? { domain: sessionCookieDomain } : {}),
       },
     })
