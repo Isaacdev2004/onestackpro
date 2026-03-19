@@ -574,16 +574,39 @@ export async function registerRoutes(
 
       if (!user) {
         const email = discordUser.email || `${discordUser.id}@discord.user`;
-        const passwordHash = await bcrypt.hash(crypto.randomBytes(16).toString("hex"), 12);
-        user = await storage.createUser(email, passwordHash);
-
-        let licenseKey = generateLicenseKey();
-        await storage.updateUser(user.id, {
-          discordId: discordUser.id,
-          discordUsername: discordUsername,
-          licenseKey,
-        });
-        user = (await storage.getUserById(user.id))!;
+        const existingFallbackUser = await storage.getUserByEmail(email);
+        if (existingFallbackUser) {
+          await storage.updateUser(existingFallbackUser.id, {
+            discordId: discordUser.id,
+            discordUsername,
+          });
+          user = { ...existingFallbackUser, discordId: discordUser.id, discordUsername };
+        } else {
+          const passwordHash = await bcrypt.hash(crypto.randomBytes(16).toString("hex"), 12);
+          try {
+            user = await storage.createUser(email, passwordHash);
+          } catch (createErr: any) {
+            // Handle retry/race cases where the email was created by a concurrent request.
+            const racedUser = await storage.getUserByEmail(email);
+            if (!racedUser) {
+              throw createErr;
+            }
+            await storage.updateUser(racedUser.id, {
+              discordId: discordUser.id,
+              discordUsername,
+            });
+            user = { ...racedUser, discordId: discordUser.id, discordUsername };
+          }
+        }
+        if (!user.licenseKey) {
+          const licenseKey = generateLicenseKey();
+          await storage.updateUser(user.id, {
+            discordId: discordUser.id,
+            discordUsername,
+            licenseKey,
+          });
+          user = (await storage.getUserById(user.id))!;
+        }
       }
 
       req.session.userId = user.id;
