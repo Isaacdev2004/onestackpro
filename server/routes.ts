@@ -142,14 +142,18 @@ const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || "";
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || "";
 
 function getPublicBaseUrl(req: Request): string {
+  const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
+  const host = req.headers["x-forwarded-host"] || req.headers.host || "";
+  if (host) {
+    return `${protocol}://${host}`;
+  }
+
   const configuredBaseUrl = process.env.PUBLIC_APP_URL?.trim();
   if (configuredBaseUrl) {
     return configuredBaseUrl.replace(/\/+$/, "");
   }
 
-  const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
-  const host = req.headers["x-forwarded-host"] || req.headers.host || "";
-  return `${protocol}://${host}`;
+  return "https://onestack.pro";
 }
 
 function getDiscordRedirectUri(req: Request): string {
@@ -503,7 +507,10 @@ export async function registerRoutes(
     const redirectUri = getDiscordRedirectUri(req);
     req.session.discordRedirectUri = redirectUri;
     const url = getDiscordAuthUrl(state, redirectUri);
-    res.json({ url });
+    if (req.query.redirect === "1") {
+      return res.redirect(url);
+    }
+    return res.json({ url });
   });
 
   app.get("/api/discord/callback", async (req: Request, res: Response) => {

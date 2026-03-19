@@ -36,27 +36,8 @@ export default function AuthPage() {
 
   async function handleDiscordAuth() {
     setIsLoading(true);
-    try {
-      const res = await fetch("/api/discord/authorize", { credentials: "include" });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        toast({
-          title: "Error",
-          description: data.message || "Discord is not configured.",
-          variant: "destructive",
-        });
-        setIsLoading(false);
-      }
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to start authorization.",
-        variant: "destructive",
-      });
-      setIsLoading(false);
-    }
+    // Start OAuth through a top-level navigation to keep session cookies stable.
+    window.location.href = "/api/discord/authorize?redirect=1";
   }
 
   return (
