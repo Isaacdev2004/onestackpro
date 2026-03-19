@@ -141,10 +141,19 @@ function generateLicenseKey(): string {
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID || "";
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET || "";
 
+function getPublicBaseUrl(req: Request): string {
+  const configuredBaseUrl = process.env.PUBLIC_APP_URL?.trim();
+  if (configuredBaseUrl) {
+    return configuredBaseUrl.replace(/\/+$/, "");
+  }
+
+  const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
+  const host = req.headers["x-forwarded-host"] || req.headers.host || "";
+  return `${protocol}://${host}`;
+}
+
 function getDiscordRedirectUri(req: Request): string {
-  const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
-  const host = req.headers['x-forwarded-host'] || req.headers.host || '';
-  return `${protocol}://${host}/api/discord/callback`;
+  return `${getPublicBaseUrl(req)}/api/discord/callback`;
 }
 
 function getDiscordAuthUrl(state: string, redirectUri: string): string {
@@ -191,6 +200,7 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   const isProduction = process.env.NODE_ENV === "production";
+  const sessionCookieDomain = process.env.SESSION_COOKIE_DOMAIN;
 
   if (isProduction) {
     app.set("trust proxy", 1);
@@ -210,6 +220,7 @@ export async function registerRoutes(
         httpOnly: true,
         secure: isProduction,
         sameSite: "lax",
+        ...(sessionCookieDomain ? { domain: sessionCookieDomain } : {}),
       },
     })
   );
@@ -492,7 +503,13 @@ export async function registerRoutes(
     const redirectUri = getDiscordRedirectUri(req);
     req.session.discordRedirectUri = redirectUri;
     const url = getDiscordAuthUrl(state, redirectUri);
-    res.json({ url });
+    req.session.save((err) => {
+      if (err) {
+        console.error("Failed to persist OAuth session:", err);
+        return res.status(500).json({ message: "Failed to initialize authorization flow." });
+      }
+      return res.json({ url });
+    });
   });
 
   app.get("/api/discord/callback", async (req: Request, res: Response) => {
@@ -564,8 +581,14 @@ export async function registerRoutes(
 
       req.session.userId = user.id;
       await storage.updateUser(user.id, { currentSessionId: req.sessionID });
-
-      return res.redirect("/credentials");
+      req.session.save((err) => {
+        if (err) {
+          console.error("Failed to persist login session:", err);
+          return res.redirect("/auth?discord=error&reason=server_error");
+        }
+        return res.redirect("/credentials");
+      });
+      return;
     } catch (err: any) {
       console.error("Discord callback error:", err);
       return res.redirect("/auth?discord=error&reason=server_error");
