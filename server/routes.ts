@@ -56,6 +56,21 @@ const updatePayoutSchema = z.object({
 
 const PgStore = connectPgSimple(session);
 
+async function ensureSessionTable() {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS "session" (
+      "sid" varchar NOT NULL COLLATE "default",
+      "sess" json NOT NULL,
+      "expire" timestamp(6) NOT NULL,
+      CONSTRAINT "session_pkey" PRIMARY KEY ("sid")
+    )
+  `);
+  await pool.query(`
+    CREATE INDEX IF NOT EXISTS "IDX_session_expire"
+    ON "session" ("expire")
+  `);
+}
+
 declare module "express-session" {
   interface SessionData {
     userId: string;
@@ -206,6 +221,8 @@ export async function registerRoutes(
   const isProduction = process.env.NODE_ENV === "production";
   const sessionCookieDomain = process.env.SESSION_COOKIE_DOMAIN;
 
+  await ensureSessionTable();
+
   if (isProduction) {
     app.set("trust proxy", 1);
   }
@@ -214,7 +231,7 @@ export async function registerRoutes(
     session({
       store: new PgStore({
         pool: pool as any,
-        createTableIfMissing: true,
+        createTableIfMissing: false,
       }),
       secret: process.env.SESSION_SECRET || "onestack-dev-secret",
       resave: false,
