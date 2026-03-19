@@ -387,7 +387,14 @@ export async function registerRoutes(
       }
       await storage.updateUser(user.id, { welcomeToken: null, currentSessionId: req.sessionID });
       req.session.userId = user.id;
-      res.json({ user: sanitizeUser(user) });
+      req.session.save((err) => {
+        if (err) {
+          console.error("Failed to persist welcome login session:", err);
+          return res.status(500).json({ message: "Failed to persist session" });
+        }
+        return res.json({ user: sanitizeUser(user) });
+      });
+      return;
     } catch (err: any) {
       res.status(500).json({ message: err.message || "Server error" });
     }
@@ -628,13 +635,13 @@ export async function registerRoutes(
 
       req.session.userId = user.id;
       await storage.updateUser(user.id, { currentSessionId: req.sessionID });
-      req.session.save((err) => {
-        if (err) {
-          console.error("Failed to persist login session after Discord callback:", err);
-          return res.redirect("/auth?discord=error&reason=server_error");
-        }
-        return res.redirect("/credentials");
+      const sessionToken = crypto.randomBytes(32).toString("hex");
+      await storage.updateUser(user.id, { welcomeToken: sessionToken, currentSessionId: null });
+      const params = new URLSearchParams({
+        session: sessionToken,
+        next: "dashboard",
       });
+      return res.redirect(`/welcome?${params.toString()}`);
       return;
     } catch (err: any) {
       console.error("Discord callback error:", err);

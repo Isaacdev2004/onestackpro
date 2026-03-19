@@ -27,13 +27,18 @@ export default function WelcomePage() {
   useEffect(() => {
     const params = new URLSearchParams(search);
     const sessionToken = params.get("session");
+    const next = params.get("next");
     if (sessionToken && !user) {
       setAuthenticating(true);
       fetch(`/api/auth/welcome?session=${encodeURIComponent(sessionToken)}`, { credentials: "include" })
         .then(async (res) => {
           if (res.ok) {
             await refetchUser();
-            window.history.replaceState({}, "", "/welcome");
+            if (next === "dashboard") {
+              setLocation("/dashboard");
+            } else {
+              window.history.replaceState({}, "", "/welcome");
+            }
           } else {
             const data = await res.json();
             setAuthError(data.message || "Invalid session token");
@@ -42,7 +47,7 @@ export default function WelcomePage() {
         .catch(() => setAuthError("Connection error"))
         .finally(() => setAuthenticating(false));
     }
-  }, [search, user, refetchUser]);
+  }, [search, user, refetchUser, setLocation]);
 
   const activeTools = tools?.filter((t) => t.active) || [];
   const licenseKey = user?.licenseKey || "";
