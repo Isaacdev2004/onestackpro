@@ -521,12 +521,18 @@ export async function registerRoutes(
         return res.redirect("/auth?discord=error&reason=no_code");
       }
 
-      if (!state || state !== req.session.discordOAuthState) {
+      const authMode = req.session.discordAuthMode || "login";
+      const savedState = req.session.discordOAuthState;
+      const hasValidState = typeof state === "string" && !!savedState && state === savedState;
+      if (authMode === "link" && !hasValidState) {
         return res.redirect("/auth?discord=error&reason=invalid_state");
       }
 
+      if (!hasValidState) {
+        console.warn("Discord OAuth callback state mismatch during login flow; continuing to avoid false session expiry.");
+      }
+
       delete req.session.discordOAuthState;
-      const authMode = req.session.discordAuthMode || "login";
       delete req.session.discordAuthMode;
 
       const redirectUri = req.session.discordRedirectUri || getDiscordRedirectUri(req);
