@@ -131,7 +131,8 @@ async function requireAuth(req: Request, res: Response, next: NextFunction) {
     return res.status(401).json({ message: "Not authenticated" });
   }
 
-  if (user.currentSessionId && user.currentSessionId !== req.sessionID) {
+  const enforceSingleSession = process.env.ENFORCE_SINGLE_SESSION === "true";
+  if (enforceSingleSession && user.currentSessionId && user.currentSessionId !== req.sessionID) {
     req.session.destroy(() => {});
     return res.status(401).json({ message: "Session expired. You have been logged in from another location." });
   }
